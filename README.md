@@ -42,8 +42,43 @@ Early scaffold — built incrementally. See the checklist below.
 - [x] Database schema + migrations
 - [x] Frontend skeleton (Next.js)
 - [x] Agent loop + MCP client skeleton
-- [ ] Docker Compose + dependency install
+- [x] Docker Compose + dependency install
 
 ## Getting started
 
-Instructions are added as each layer lands. See `infra/` and each package's README.
+### Option A — Docker Compose (whole stack)
+
+Requires Docker. Brings up Postgres+pgvector (schema auto-applied), the API, and the web app.
+
+```bash
+cd infra
+cp .env.example .env      # optional: add ANTHROPIC_API_KEY; blank = stub tutor
+docker compose up --build
+```
+
+Then open http://localhost:3000 (API at http://localhost:8000, `/health` to check).
+From the repo root you can also just run `make up`.
+
+### Option B — Run services directly
+
+Backend:
+
+```bash
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+uvicorn app.main:app --reload --port 8000
+```
+
+Frontend (in another terminal):
+
+```bash
+cd frontend
+npm install
+cp .env.local.example .env.local
+npm run dev
+```
+
+With Option B you provide your own Postgres and apply `infra/db/init/001_init.sql`
+(`make db-migrate`). Leave `ANTHROPIC_API_KEY` blank to use the stub tutor.

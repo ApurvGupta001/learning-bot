@@ -1,0 +1,53 @@
+# Full local stack: Postgres+pgvector, FastAPI backend, Next.js frontend.
+#   cd infra && docker compose up --build
+# Compose reads infra/.env for secrets (copy from infra/.env.example).
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: learn
+      POSTGRES_PASSWORD: learn
+      POSTGRES_DB: learnbot
+    ports:
+      # Host 5433 -> container 5432 to avoid clashing with a local Postgres on
+      # 5432. The backend still reaches the DB internally at db:5432.
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Numbered SQL in db/init/ runs automatically on first start.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U learn -d learnbot"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: ../backend
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql+psycopg://learn:learn@db:5432/learnbot
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5}
+      CUDA_MCP_URL: ${CUDA_MCP_URL:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        # NEXT_PUBLIC_* is inlined at build time; point the browser at the API.
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:

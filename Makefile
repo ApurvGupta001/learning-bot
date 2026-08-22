@@ -5,15 +5,28 @@
 -include backend/.env
 export
 
-.PHONY: help backend-setup backend-run db-migrate frontend-setup frontend-run
+.PHONY: help backend-setup backend-run db-migrate frontend-setup frontend-run up down logs
 
 help:
 	@echo "Targets:"
+	@echo "  up              build + run the whole stack via Docker Compose"
+	@echo "  down            stop the stack"
+	@echo "  logs            tail all container logs"
 	@echo "  backend-setup   create venv + install backend deps + seed .env"
 	@echo "  backend-run     run FastAPI (uvicorn) on :8000"
 	@echo "  db-migrate      apply infra/db/init/*.sql to \$$DATABASE_URL"
-	@echo "  frontend-setup  npm install (after the Next.js step)"
+	@echo "  frontend-setup  npm install"
 	@echo "  frontend-run    run Next.js dev server on :3000"
+
+# --- Docker Compose (full stack) ----------------------------------------
+up:
+	cd infra && docker compose up --build
+
+down:
+	cd infra && docker compose down
+
+logs:
+	cd infra && docker compose logs -f
 
 # --- Backend -------------------------------------------------------------
 backend-setup:

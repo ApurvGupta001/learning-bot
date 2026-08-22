@@ -55,12 +55,12 @@ class LLM:
             )
 
     async def _stub_stream(self, messages: list[dict]) -> AsyncIterator[str]:
-        last = messages[-1]["content"] if messages else ""
+        # Deliberately does NOT echo the constructed prompt (avoids leaking
+        # internal scaffolding). Runs whenever no API key is configured.
         text = (
-            "(stub tutor) I received your message. The real Anthropic model and "
-            "CUDA MCP grounding get wired in the next step; for now this proves the "
-            "streaming path works end to end.\n\n"
-            f"You said: {last}"
+            "(stub tutor) Streaming works end to end. I'm the placeholder tutor "
+            "because no ANTHROPIC_API_KEY is set. Add your key and a valid "
+            "ANTHROPIC_MODEL to get real, doc-grounded lessons."
         )
         for word in text.split(" "):
             yield word + " "
