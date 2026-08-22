@@ -38,9 +38,9 @@ learning-bot/
 Early scaffold — built incrementally. See the checklist below.
 
 - [x] Repo structure
-- [ ] Backend skeleton (FastAPI)
-- [ ] Database schema + migrations
-- [ ] Frontend skeleton (Next.js)
+- [x] Backend skeleton (FastAPI)
+- [x] Database schema + migrations
+- [x] Frontend skeleton (Next.js)
 - [ ] Agent loop + MCP client skeleton
 - [ ] Docker Compose + dependency install
 
