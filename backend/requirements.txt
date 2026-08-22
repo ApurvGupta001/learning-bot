@@ -11,6 +11,7 @@ pydantic-settings>=2.5,<3
 # Database (used from the DB step)
 sqlalchemy>=2.0.35,<2.1
 psycopg[binary]>=3.2,<3.3
+pgvector>=0.3,<0.4
 
 # MCP client + LLM (wired in later steps)
 mcp>=1.0,<2
