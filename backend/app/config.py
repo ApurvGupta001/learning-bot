@@ -16,6 +16,9 @@ class Settings(BaseSettings):
 
     # LLM (used from the agent-loop step onward)
     anthropic_api_key: str = ""
+    # Must be an exact, currently-valid model ID (e.g. claude-sonnet-5,
+    # claude-opus-5, claude-haiku-4-5-20251001). "-latest" aliases may 404.
+    anthropic_model: str = "claude-sonnet-5"
 
     # MCP (wired in the MCP step)
     cuda_mcp_url: str = ""

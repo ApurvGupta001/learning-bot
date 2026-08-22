@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.config import settings
+from app.routers import sessions
 
 app = FastAPI(
     title="Personalized Learning Bot",
@@ -32,8 +33,8 @@ def health() -> dict:
     return {"status": "ok", "version": __version__, "env": settings.app_env}
 
 
-# --- Routers (added in later steps) ---------------------------------------
-# from app.routers import sessions, progress, mcp_registry
-# app.include_router(sessions.router)
+# --- Routers --------------------------------------------------------------
+app.include_router(sessions.router)
+# Added in later steps:
 # app.include_router(progress.router)
 # app.include_router(mcp_registry.router)

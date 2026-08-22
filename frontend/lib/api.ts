@@ -56,11 +56,17 @@ export async function streamChat(
       buffer = frames.pop() ?? "";
       for (const frame of frames) {
         const line = frame.replace(/^data:\s?/, "");
+        if (!line) continue;
         if (line === "[DONE]") {
           handlers.onDone?.();
           return;
         }
-        handlers.onToken(line);
+        // Each token is JSON-encoded so newlines can't break SSE framing.
+        try {
+          handlers.onToken(JSON.parse(line) as string);
+        } catch {
+          handlers.onToken(line);
+        }
       }
     }
     handlers.onDone?.();

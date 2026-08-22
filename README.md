@@ -41,7 +41,7 @@ Early scaffold — built incrementally. See the checklist below.
 - [x] Backend skeleton (FastAPI)
 - [x] Database schema + migrations
 - [x] Frontend skeleton (Next.js)
-- [ ] Agent loop + MCP client skeleton
+- [x] Agent loop + MCP client skeleton
 - [ ] Docker Compose + dependency install
 
 ## Getting started
