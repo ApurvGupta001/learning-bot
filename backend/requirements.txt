@@ -1,0 +1,20 @@
+# Web framework
+# fastapi >=0.115.3 widened its starlette range to be compatible with mcp,
+# which requires starlette >= 0.39.
+fastapi>=0.115.6,<0.116
+uvicorn[standard]>=0.30,<0.31
+
+# Config & validation
+pydantic>=2.9,<3
+pydantic-settings>=2.5,<3
+
+# Database (used from the DB step)
+sqlalchemy>=2.0.35,<2.1
+psycopg[binary]>=3.2,<3.3
+
+# MCP client + LLM (wired in later steps)
+mcp>=1.0,<2
+anthropic>=0.39,<1
+
+# Dev
+python-dotenv>=1.0,<2
