@@ -60,3 +60,10 @@ async def run_turn(
 
     async for token in llm.stream(SYSTEM_PROMPT, messages):
         yield token
+
+    # Deterministic citations footer so sources always appear when we grounded
+    # the answer (independent of whether the model cited them inline).
+    if docs:
+        yield "\n\nSources:\n"
+        for d in docs:
+            yield f"- {d.title}{f' — {d.url}' if d.url else ''}\n"
