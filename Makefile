@@ -5,7 +5,7 @@
 -include backend/.env
 export
 
-.PHONY: help backend-setup backend-run db-migrate frontend-setup frontend-run up down logs
+.PHONY: help backend-setup backend-run db-migrate seed test frontend-setup frontend-run up down logs
 
 help:
 	@echo "Targets:"
@@ -15,6 +15,8 @@ help:
 	@echo "  backend-setup   create venv + install backend deps + seed .env"
 	@echo "  backend-run     run FastAPI (uvicorn) on :8000"
 	@echo "  db-migrate      apply infra/db/init/*.sql to \$$DATABASE_URL"
+	@echo "  seed            load the CUDA concept graph into the DB"
+	@echo "  test            run backend tests"
 	@echo "  frontend-setup  npm install"
 	@echo "  frontend-run    run Next.js dev server on :3000"
 
@@ -40,6 +42,15 @@ backend-setup:
 backend-run:
 	cd backend && . .venv/bin/activate && \
 	uvicorn app.main:app --reload --port 8000
+
+# Load the CUDA concept graph. Needs a running DB + DATABASE_URL in backend/.env.
+# In Docker instead run:  docker compose exec backend python -m app.seed
+seed:
+	cd backend && . .venv/bin/activate && python -m app.seed
+
+test:
+	cd backend && . .venv/bin/activate && python -m pytest -q || \
+	python tests/test_mcp_client.py
 
 # --- Database ------------------------------------------------------------
 # Applies the numbered SQL migrations in order. Requires a running Postgres

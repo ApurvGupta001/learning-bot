@@ -44,9 +44,18 @@ are retrieved. Graceful: failures degrade to "no docs". Parser covered by
 **Remaining to fully close in prod:** confirm live against the real endpoint and
 seed an `mcp_registry` row (registry-driven routing is Phase 10).
 
-## Phase 7 — Concept graph seed ⬜
-Seed CUDA `topics` + `concepts` (with prerequisites) and an initial ordering.
-**Acceptance:** the syllabus exists in the DB and drives lesson order.
+## Phase 7 — Concept graph seed ✅
+Seeded the CUDA syllabus (12 concepts with prerequisites) as a validated DAG.
+- Data: `backend/app/seed_data.py` (concepts + `validate_graph` DAG check).
+- Seeder: `backend/app/seed.py` — idempotent, resolves prereq slugs→ids
+  (`python -m app.seed` / `make seed` / `docker compose exec backend python -m app.seed`).
+- Read API: `GET /topics`, `GET /topics/{slug}/concepts` (`app/routers/catalog.py`).
+- Frontend home fetches `/topics` with a static fallback (`app/TopicList.tsx`).
+- Tests: `backend/tests/test_seed_graph.py` (duplicates, unknown prereq, self-loop,
+  cycle, valid DAG) — pass.
+**Done — to activate:** run the seeder against a running DB.
+**Note:** the agent loop still teaches a stub concept; wiring the graph into
+lesson selection is Phase 8 (`pick_next_concept`).
 
 ## Phase 8 — Teach / quiz / grade + mastery ⬜
 Generate exercises, grade answers (rubric prompt), update

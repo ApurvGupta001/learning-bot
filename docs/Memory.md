@@ -34,9 +34,14 @@ loop + MCP client, 5 Docker Compose. (See `Phases.md`.)
   (NGC token) only if the server returns 401. Not yet confirmed live from here
   (sandbox can't reach the endpoint). Tests: `backend/tests/test_mcp_client.py`
   (10 pass).
-- **Phase 7 (next):** concept-graph seed data (tables exist, empty).
-- Teach/quiz/grade cycle + mastery updates + `pick_next_concept()` (currently a
-  stub returning "Introduction").
+- **Phase 7 DONE:** CUDA syllabus seeded — 12 concepts w/ prerequisites, validated
+  as a DAG. Data `app/seed_data.py`, seeder `app/seed.py` (idempotent; run
+  `make seed` or `docker compose exec backend python -m app.seed`), read API
+  `GET /topics` + `GET /topics/{slug}/concepts` (`app/routers/catalog.py`),
+  frontend `app/TopicList.tsx` fetches topics w/ fallback. Tests
+  `backend/tests/test_seed_graph.py`.
+- **Phase 8 (next):** teach/quiz/grade cycle + mastery updates + `pick_next_concept()`
+  using the seeded graph (agent loop currently still teaches a stub "Introduction").
 - Message/session persistence (endpoint doesn't write to DB yet).
 - Progress dashboard; retrieval cache population; MCP registry admin routes.
 
@@ -80,6 +85,7 @@ docker compose up -d --build       # http://localhost:3000
 - Frontend chat + client: `frontend/app/chat/page.tsx`, `frontend/lib/api.ts`
 
 ## 9. Immediate next action
-Start **Phase 7**: seed CUDA `topics` + `concepts` (with prerequisites) so the
-syllabus drives lesson order. (Phase 6 retrieval is implemented; to see it live,
-set `CUDA_MCP_URL` and ask a CUDA question — a Sources footer should appear.)
+Start **Phase 8**: implement `pick_next_concept()` using the seeded graph +
+`learner_concept_state`, generate exercises, grade answers, update mastery, and
+persist `sessions`/`messages`. (Phases 6 & 7 done; run `make seed` to load the
+CUDA catalog into a running DB.)

@@ -14,6 +14,19 @@ export async function getHealth(): Promise<unknown> {
   return res.json();
 }
 
+export interface Topic {
+  id: number;
+  slug: string;
+  title: string;
+  description?: string | null;
+}
+
+export async function getTopics(): Promise<Topic[]> {
+  const res = await fetch(`${API_BASE}/topics`);
+  if (!res.ok) throw new Error(`getTopics failed: ${res.status}`);
+  return res.json();
+}
+
 export interface StreamHandlers {
   onToken: (text: string) => void;
   onDone?: () => void;

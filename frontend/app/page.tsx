@@ -1,7 +1,4 @@
-import Link from "next/link";
-
-// Topic picker stub. Topics will come from GET /topics once that route lands.
-const TOPICS = [{ slug: "cuda", title: "CUDA" }];
+import TopicList from "./TopicList";
 
 export default function Home() {
   return (
@@ -13,17 +10,7 @@ export default function Home() {
 
       <div className="card" style={{ marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Topics</h2>
-        <ul>
-          {TOPICS.map((t) => (
-            <li key={t.slug}>
-              <Link href={`/chat?topic=${t.slug}`}>{t.title}</Link>
-            </li>
-          ))}
-        </ul>
-        <p className="muted" style={{ fontSize: 14 }}>
-          More topics appear here once the backend <code>/topics</code> route and
-          MCP registry are wired.
-        </p>
+        <TopicList />
       </div>
     </main>
   );

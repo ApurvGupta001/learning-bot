@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.config import settings
-from app.routers import sessions
+from app.routers import catalog, sessions
 
 app = FastAPI(
     title="Personalized Learning Bot",
@@ -34,6 +34,7 @@ def health() -> dict:
 
 
 # --- Routers --------------------------------------------------------------
+app.include_router(catalog.router)
 app.include_router(sessions.router)
 # Added in later steps:
 # app.include_router(progress.router)
